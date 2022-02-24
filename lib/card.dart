@@ -132,13 +132,13 @@ class _CardsState extends State<Cards> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      toolbarHeight: 50,
+      toolbarHeight: 60,
       // backgroundColor: Colors.white,
       backgroundColor: _selectedCardIndex != null
           ? _cards[_cards
                   .indexWhere((element) => element.index == _selectedCardIndex)]
               .color
-          : HexColor('#ede7f6'),
+          : Colors.white,
       title: Text(
         _selectedCardIndex != null
             ? 'Selected Card - $_selectedCardIndex'
@@ -153,12 +153,12 @@ class _CardsState extends State<Cards> {
     return Scaffold(
       appBar: _buildAppBar(),
       body: Container(
-        // color: HexColor('#ede7f6'),
-        color: _selectedCardIndex != null
-            ? _cards[_cards.indexWhere(
-                    (element) => element.index == _selectedCardIndex)]
-                .color
-            : HexColor('#ede7f6'),
+        color: Colors.white,
+        // color: _selectedCardIndex != null
+        //     ? _cards[_cards.indexWhere(
+        //             (element) => element.index == _selectedCardIndex)]
+        //         .color
+        //     : HexColor('#ede7f6'),
         child: Center(
           child: Stack(
             clipBehavior: Clip.none,
@@ -209,11 +209,11 @@ class _CreditCardState extends State<CreditCard> {
   double distance = 1;
   double minDistance = 1;
   double maxDistance = 1.25;
-  double distanceStep = 0.06;
+  double distanceStep = 0.03;
 
   double bottom = -1.4;
   // double centre = -3.1;
-  double centre = -2.6;
+  double centre = -2.9;
   double end = -3.4;
 
   bool _onTop = false;
@@ -224,11 +224,14 @@ class _CreditCardState extends State<CreditCard> {
   double maxPerspective = 0.0;
   double perspectiveStep = 0.00003;
 
+  // TODO
+  double dragSensitivity = -60;
+
   double _calcTop() {
     if (x == 0) return widget.start;
     if (x > 0) return widget.start;
     // if (x < widget.end) return widget.end;
-    return widget.start + -x * -60;
+    return widget.start + -x * dragSensitivity;
   }
 
   @override
@@ -262,7 +265,7 @@ class _CreditCardState extends State<CreditCard> {
                   distance = minDistance;
                 }
                 // BOTTOM < X > CENTER
-                if (x < bottom - 0.05 && x > centre - 0.05) {
+                if (x < bottom && x > centre) {
                   x = centre;
                   perspective = maxPerspective;
                   widget.onSelected(widget.index);
