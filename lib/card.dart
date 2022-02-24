@@ -22,9 +22,9 @@ class _CardsState extends State<Cards> {
         _cards.insert(_cards.length - 1, _cards.removeAt(elIndex));
       }
 
-      _cards.forEach((element) {
-        // print('onTop - ${element.index} and ${element.start}');
-      });
+      // _cards.forEach((element) {
+      // print('onTop - ${element.index} and ${element.start}');
+      // });
     });
   }
 
@@ -35,9 +35,9 @@ class _CardsState extends State<Cards> {
         _cards.insert(_cards.length - 1, _cards.removeAt(elIndex));
       }
     });
-    _cards.forEach((element) {
-      // print('onBottom - ${element.index} and ${element.start}');
-    });
+    // _cards.forEach((element) {
+    // print('onBottom - ${element.index} and ${element.start}');
+    // });
   }
 
   void _onSelected(int? selected) {
@@ -204,23 +204,25 @@ class _CreditCardState extends State<CreditCard> {
 
   double x = 0;
   double y = 0;
+  double startY = 0.8;
+  double yStep = 0.01;
   double z = 0;
 
   double distance = 1;
   double minDistance = 1;
-  double maxDistance = 1.25;
-  double distanceStep = 0.03;
+  double maxDistance = 1.35;
+  double distanceStep = 0.01;
 
-  double bottom = -1.4;
+  double bottom = -1.1;
   // double centre = -3.1;
-  double centre = -2.9;
-  double end = -3.4;
+  double centre = -2.6;
+  double end = -3.1;
 
   bool _onTop = false;
   bool _onBottom = true;
 
-  double perspective = -0.00028;
-  double minPerspective = -0.00028;
+  double perspective = -0.0003;
+  double minPerspective = -0.0003;
   double maxPerspective = 0.0;
   double perspectiveStep = 0.00003;
 
@@ -244,10 +246,10 @@ class _CreditCardState extends State<CreditCard> {
         transform: Matrix4(
           //
           1, 0, 0, 0,
-          0, 1, 0, perspective * 5,
+          0, startY, 0, perspective * 5,
           0, 0, 1, 0,
           0, 0, 0, distance,
-        ),
+        )..setEntry(3, 2, 0.001),
         // ..rotateX(x)
         // ..rotateY(y)
         // ..rotateZ(z),
@@ -263,6 +265,7 @@ class _CreditCardState extends State<CreditCard> {
                   perspective = minPerspective;
                   widget.onSelected(null);
                   distance = minDistance;
+                  startY = 0.8;
                 }
                 // BOTTOM < X > CENTER
                 if (x < bottom && x > centre) {
@@ -270,6 +273,7 @@ class _CreditCardState extends State<CreditCard> {
                   perspective = maxPerspective;
                   widget.onSelected(widget.index);
                   distance = minDistance;
+                  startY = 1;
                 }
                 // X > CENTER
                 if (x < centre) {
@@ -277,6 +281,7 @@ class _CreditCardState extends State<CreditCard> {
                   perspective = maxPerspective;
                   widget.onSelected(null);
                   distance = maxDistance;
+                  startY = 1;
                 }
               }
             });
@@ -287,21 +292,33 @@ class _CreditCardState extends State<CreditCard> {
               // print('perspective - $perspective');
               setState(() {
                 // BOTTOM TO CENTER
-                if (x < bottom &&
+                if (x < bottom + 0.5 &&
                     perspective < maxPerspective &&
                     details.delta.dy < 0) {
+                  if (startY + yStep >= 1) {
+                    startY = 1;
+                  } else {
+                    startY += yStep;
+                  }
                   if (perspective + perspectiveStep >= maxPerspective) {
                     perspective = maxPerspective;
                   } else {
                     perspective += perspectiveStep;
+                    startY += yStep;
                   }
-                } else if (x > bottom &&
+                } else if (x > bottom + 0.5 &&
                     perspective > minPerspective &&
                     details.delta.dy > 0) {
+                  if (startY - yStep <= 0.8) {
+                    startY = 0.8;
+                  } else {
+                    startY -= yStep;
+                  }
                   if (perspective - perspectiveStep <= minPerspective) {
                     perspective = minPerspective;
                   } else {
                     perspective -= perspectiveStep;
+                    startY -= yStep;
                   }
                 }
                 //
