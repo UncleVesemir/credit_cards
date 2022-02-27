@@ -1,5 +1,8 @@
 import 'package:credit_cards/card.dart';
+import 'package:credit_cards/widget/app.dart';
+import 'package:credit_cards/widget/credit_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,13 +13,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const NeumorphicApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      themeMode: ThemeMode.light, //or dark / system
+      darkTheme: NeumorphicThemeData(
+        baseColor: Color(0xff333333),
+        accentColor: Colors.green,
+        lightSource: LightSource.topLeft,
+        depth: 4,
+        intensity: 0.3,
       ),
-      home: const Cards(),
+      theme: NeumorphicThemeData(
+        baseColor: Color(0xffDDDDDD),
+        accentColor: Colors.cyan,
+        lightSource: LightSource.topLeft,
+        depth: 6,
+        intensity: 0.5,
+      ),
+      home: Home(),
     );
   }
 }
