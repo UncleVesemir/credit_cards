@@ -15,15 +15,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<CreditCardItem> _cards = [];
 
+  LinearGradient? _selectedColor;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _cards.add(
       CreditCardItem(
-        key: UniqueKey(),
+        // key: UniqueKey(),
         cardInfo: CreditCardModel(
-          height: 190.0,
-          width: 300.0,
+          index: 0,
+          height: 170.0,
+          width: 280.0,
           cardHolderName: 'ILYA LEBEDZEU',
           expDate: '21/05',
           cardNumber: 1234567898765432,
@@ -33,10 +36,11 @@ class _HomeState extends State<Home> {
     );
     _cards.add(
       CreditCardItem(
-        key: UniqueKey(),
+        // key: UniqueKey(),
         cardInfo: CreditCardModel(
-          height: 190.0,
-          width: 300.0,
+          index: 1,
+          height: 170.0,
+          width: 280.0,
           cardHolderName: 'ILYA LEBEDZEU',
           expDate: '21/05',
           cardNumber: 1234567898765432,
@@ -46,10 +50,11 @@ class _HomeState extends State<Home> {
     );
     _cards.add(
       CreditCardItem(
-        key: UniqueKey(),
+        // key: UniqueKey(),
         cardInfo: CreditCardModel(
-          height: 190.0,
-          width: 300.0,
+          index: 2,
+          height: 170.0,
+          width: 280.0,
           cardHolderName: 'ILYA LEBEDZEU',
           expDate: '21/05',
           cardNumber: 1234567898765432,
@@ -59,10 +64,11 @@ class _HomeState extends State<Home> {
     );
     _cards.add(
       CreditCardItem(
-        key: UniqueKey(),
+        // key: UniqueKey(),
         cardInfo: CreditCardModel(
-          height: 190.0,
-          width: 300.0,
+          index: 3,
+          height: 170.0,
+          width: 280.0,
           cardHolderName: 'ILYA LEBEDZEU',
           expDate: '21/05',
           cardNumber: 1234567898765432,
@@ -72,13 +78,25 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _updateBackground(LinearGradient? value) {
+    setState(() {
+      _selectedColor = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: NeumorphicColors.background,
-      body: Center(
-        child: CreditCards3d(
-          children: _cards,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: _selectedColor,
+        ),
+        child: Center(
+          child: CreditCards3d(
+            children: _cards,
+            onSelected: _updateBackground,
+          ),
         ),
       ),
     );

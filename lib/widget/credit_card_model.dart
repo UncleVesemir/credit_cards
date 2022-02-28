@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 class CreditCardModel {
+  final int index;
   final String cardHolderName;
   final int cardNumber;
   final String expDate;
@@ -10,6 +11,7 @@ class CreditCardModel {
   final double height;
 
   CreditCardModel({
+    required this.index,
     required this.cardHolderName,
     required this.cardNumber,
     required this.expDate,

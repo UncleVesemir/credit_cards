@@ -5,7 +5,7 @@ class CreditCardItem extends StatefulWidget {
   final CreditCardModel cardInfo;
   const CreditCardItem({
     required this.cardInfo,
-    required Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

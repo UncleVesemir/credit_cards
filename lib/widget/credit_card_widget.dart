@@ -4,8 +4,10 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class CreditCards3d extends StatefulWidget {
   final List<CreditCardItem> children;
+  final Function(LinearGradient?) onSelected;
   const CreditCards3d({
     required this.children,
+    required this.onSelected,
     Key? key,
   }) : super(key: key);
 
@@ -17,6 +19,10 @@ class _CreditCards3dState extends State<CreditCards3d> {
   double dxLight = 1.0;
   double dyLight = 0.0;
   List<CreditCardItem>? _cards;
+  List<CardAnimationController> _items = [];
+
+  List<CardAnimationController> _topCards = [];
+  int? _selectedCardIndex;
 
   @override
   void initState() {
@@ -24,32 +30,74 @@ class _CreditCards3dState extends State<CreditCards3d> {
     _cards = widget.children;
   }
 
-  // void _onTop(int index) {
-  //   setState(() {
-  //     final elIndex = _cards.indexWhere((element) => element.index == index);
-  //     _topCards.add(_cards[elIndex]);
-  //     if (elIndex != _cards.length - 1) {
-  //       _cards.insert(_cards.length - 1, _cards.removeAt(elIndex));
-  //     }
-  //   });
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _initCards();
+  }
+
+  void _onTop(int index) {
+    setState(() {
+      print('_cards - ${_cards!.length}');
+      if (_items.length == widget.children.length) {
+        // print(
+        // '${_items[0].item.cardInfo.index} ${_items[1].item.cardInfo.index} ${_items[2].item.cardInfo.index} ${_items[3].item.cardInfo.index}');
+        final elIndex = _items
+            .indexWhere((element) => element.item.cardInfo.index == index);
+        _topCards.add(_items[elIndex]);
+        if (elIndex != _items.length - 1) {
+          _items.insert(_items.length - 1, _items.removeAt(elIndex));
+        }
+      }
+    });
+  }
 
   // void _onBottom(int index) {
   //   setState(() {
-  //     final elIndex = _cards.indexWhere((element) => element.index == index);
-  //     _topCards.removeLast();
-  //     if (elIndex != _cards.length - 1) {
-  //       _cards.insert(_cards.length - 1, _cards.removeAt(elIndex));
+  //     if (_cards != null) {
+  //       final elIndex =
+  //           _cards!.indexWhere((element) => element.cardInfo.index == index);
+  //       _topCards.removeLast();
+  //       if (elIndex != _cards!.length - 1) {
+  //         _cards!.insert(_cards!.length - 1, _cards!.removeAt(elIndex));
+  //       }
   //     }
   //   });
   // }
 
-  // void _onSelected(int? selected) {
-  //   setState(() {
-  //     _selectedCardIndex = selected;
-  //     // _updateDraggable(selected);
-  //   });
-  // }
+  void _onSelected(int? index) {
+    setState(() {
+      _selectedCardIndex = index;
+      if (index != null) {
+        widget.onSelected(widget.children[index].cardInfo.gradient!);
+      } else {
+        widget.onSelected(null);
+      }
+      // _updateDraggable(selected);
+    });
+  }
+
+  void _initCards() {
+    setState(() {
+      for (var i = 0; i < widget.children.length; i++) {
+        _items.add(
+          CardAnimationController(
+            activeIndex: _selectedCardIndex ?? 0,
+            key: UniqueKey(),
+            item: _cards![i],
+            data: CardAnimationModel(
+              x: 10 + i * 15,
+              y: 100,
+              dxLight: 0,
+              dyLight: 0,
+            ),
+            onTop: _onTop,
+            onSelected: _onSelected,
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +105,7 @@ class _CreditCards3dState extends State<CreditCards3d> {
       child: Center(
         child: Stack(
           clipBehavior: Clip.none,
-          children: [
-            for (var i = 0; i < widget.children.length; i++)
-              CardAnimationController(
-                item: _cards![i],
-                data: CardAnimationModel(
-                  x: 10 + i * 15,
-                  y: 100,
-                  dxLight: 0.5,
-                  dyLight: -1,
-                ),
-                onBottom: (int value) {},
-                onTop: (int value) {},
-                onSelected: (int? value) {},
-              ),
-          ],
+          children: _items,
         ),
       ),
     );
@@ -81,12 +115,12 @@ class _CreditCards3dState extends State<CreditCards3d> {
 class CardAnimationController extends StatefulWidget {
   final CreditCardItem item;
   final CardAnimationModel data;
+  final int activeIndex;
   final Function(int) onTop;
-  final Function(int) onBottom;
   final Function(int?) onSelected;
 
   const CardAnimationController({
-    required this.onBottom,
+    required this.activeIndex,
     required this.onSelected,
     required this.onTop,
     required this.item,
@@ -140,12 +174,37 @@ class _CardAnimationControllerState extends State<CardAnimationController>
     );
     animation = Tween(begin: animationStart, end: animationEnd)
         .animate(animationController!);
+
+    animationController?.addListener(() {
+      if (animation != null) {
+        if (animation!.value >= 1.2) {
+          print(widget.activeIndex);
+          widget.onTop(widget.item.cardInfo.index);
+        }
+        if (animation!.value >= 1.2) {
+          widget.onSelected(widget.item.cardInfo.index);
+        }
+        if (animation!.value >= 2.4 || animation!.value < 1.2) {
+          widget.onSelected(null);
+        }
+      }
+    });
+
+    _checkPosition;
   }
 
   @override
   void dispose() {
     animationController?.dispose();
     super.dispose();
+  }
+
+  void _checkPosition() {
+    setState(() {
+      if (widget.activeIndex == widget.item.cardInfo.index) {
+        _animateBottomToCenter();
+      }
+    });
   }
 
   /// Move [widget.item] From Bottom to Center
