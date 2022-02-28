@@ -88,7 +88,7 @@ class _CreditCards3dState extends State<CreditCards3d> {
             data: CardAnimationModel(
               x: 10 + i * 15,
               y: 100,
-              dxLight: 0,
+              dxLight: 1,
               dyLight: 0,
             ),
             onTop: _onTop,
@@ -305,6 +305,7 @@ class _CardAnimationControllerState extends State<CardAnimationController>
               onPanUpdate: _determineDircetion,
               child: Neumorphic(
                 style: NeumorphicStyle(
+                  oppositeShadowLightSource: true,
                   boxShape:
                       NeumorphicBoxShape.roundRect(BorderRadius.circular(24)),
                   depth: _calcShadow(),

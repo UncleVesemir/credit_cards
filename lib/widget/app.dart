@@ -1,3 +1,4 @@
+import 'package:credit_cards/book_widget.dart';
 import 'package:credit_cards/const.dart';
 import 'package:credit_cards/widget/credit_card_item.dart';
 import 'package:credit_cards/widget/credit_card_model.dart';
@@ -97,6 +98,7 @@ class _HomeState extends State<Home> {
             children: _cards,
             onSelected: _updateBackground,
           ),
+          // child: BookWidget(),
         ),
       ),
     );
