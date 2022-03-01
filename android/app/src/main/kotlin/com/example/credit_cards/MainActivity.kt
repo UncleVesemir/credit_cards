@@ -15,6 +15,7 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Messenger
 import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.EventChannel
 
 class MainActivity: FlutterActivity() {
 
@@ -23,7 +24,9 @@ class MainActivity: FlutterActivity() {
     private val PRESSURE_CHANNEL = "training/pressure";
 
     private var methodChannel: MethodChannel? = null
-    private var sensorManager: SensorManager? = null
+    private lateinit var sensorManager: SensorManager
+    private var pressureChannel: EventChannel? = null
+    private var pressureStreamHandler: StreamHandler? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -64,10 +67,15 @@ class MainActivity: FlutterActivity() {
                 result.notImplemented()
             }
         }
+
+        pressureChannel = EventChannel(messenger, PRESSURE_CHANNEL)
+        pressureStreamHandler = StreamHandler(sensorManager!!, Sensor.TYPE_PRESSURE)
+        pressureChannel!!.setStreamHandler(pressureStreamHandler)
     }
 
     private fun teardownChannels() {
         methodChannel!!.setMethodCallHandler(null)
+        pressureChannel!!.setStreamHandler(null)
     }
 
     private fun getBatteryLevel() : Int {

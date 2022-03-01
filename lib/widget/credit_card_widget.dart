@@ -157,6 +157,12 @@ class _CardAnimationControllerState extends State<CardAnimationController>
   double controllerCenter = 0.5;
   double controllerEnd = 1.0;
 
+  List<double>? x;
+  List<double>? fx;
+  List<double>? fy;
+  List<double>? fz;
+  List<double>? fp;
+
   bool _active = false;
 
   /// Control animation steps 0 [controllerStart] -> 0.5 [controllerCenter]-> 1[controllerEnd]
@@ -168,6 +174,13 @@ class _CardAnimationControllerState extends State<CardAnimationController>
   @override
   void initState() {
     super.initState();
+
+    x = [animationStart, animationCenter, animationEnd];
+    fx = [xStart, xCenter, xEnd];
+    fy = [yStart, yEnd, yEnd];
+    fz = [zStart, zCenter, zEnd];
+    fp = [perspectiveStart, perspectiveEnd, perspectiveEnd];
+
     animationController ??= AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -198,6 +211,37 @@ class _CardAnimationControllerState extends State<CardAnimationController>
     animationController?.dispose();
     super.dispose();
   }
+
+  /// LAGRANGE POLYNOMIAL
+  /// May require some optimization in the future!
+  ///
+  /// as the first parameter the function takes F(x)[xc],
+  /// as second a List of x[x], where x['n'] is animation
+  /// values, and as third a List of y[y], where y [fx], [fy], [fz], [fp],
+  /// is Location value
+  double L(double xc, List<double> x, List<double> y) {
+    int n = x.length;
+    double top;
+    double bottom;
+    int k;
+    double R = 0;
+    for (int i = 0; i < n; i++) {
+      top = 1;
+      bottom = 1;
+      for (k = 0; k < n; k++) {
+        if (k == i) continue;
+        top *= xc - x[k];
+      }
+      for (k = 0; k < n; k++) {
+        if (x[i] == x[k]) continue;
+        bottom *= x[i] - x[k];
+      }
+      R += y[i] * top / bottom;
+    }
+    return R;
+  }
+
+  /// END
 
   void _checkPosition() {
     setState(() {
@@ -234,7 +278,8 @@ class _CardAnimationControllerState extends State<CardAnimationController>
   double _calcX() {
     double? t = animation?.value;
     t ??= 1;
-    return 60 * (t * t) - 330 * t + 270;
+    return L(t, x!, fx!);
+    // return 60 * (t * t) - 330 * t + 270;
   }
 
   /// 1 -> 0.5 [yStart]; 2 -> 1 [yEnd]; 3 -> 1 [yEnd]
@@ -242,7 +287,8 @@ class _CardAnimationControllerState extends State<CardAnimationController>
     double? t = animation?.value;
     t ??= 1;
     if (t >= 2) return 1;
-    return -0.25 * (t * t) + 1.25 * t - 0.5;
+    return L(t, x!, fy!);
+    // return -0.25 * (t * t) + 1.25 * t - 0.5;
     // return -0.8076923 / t + 1.3269231;
   }
 
@@ -250,7 +296,8 @@ class _CardAnimationControllerState extends State<CardAnimationController>
   double _calcZ() {
     double? t = animation?.value;
     t ??= 1;
-    return 0.2 * (t * t) - 0.7 * t + 1.5;
+    return L(t, x!, fz!);
+    // return 0.2 * (t * t) - 0.7 * t + 1.5;
   }
 
   /// 1 -> -0.002 [perspectiveStart]; 2 -> 0 [perspectiveEnd]; 3 -> 0 [perspectiveEnd]
@@ -258,7 +305,8 @@ class _CardAnimationControllerState extends State<CardAnimationController>
     double? t = animation?.value;
     t ??= 1;
     if (t >= 2) return 0;
-    return -0.001 * (t * t) + 0.005 * t - 0.006;
+    return L(t, x!, fp!);
+    // return -0.001 * (t * t) + 0.005 * t - 0.006;
   }
 
   double _calcShadow() {

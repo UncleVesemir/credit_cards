@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,6 +19,25 @@ class _BatteryScreenState extends State<BatteryScreen> {
 
   String _batteryLevel = 'No information';
   String _sensorAvailable = 'Unknown';
+  double _pressureReading = 0;
+  StreamSubscription? pressureSubscription;
+
+  _startReading() {
+    pressureSubscription =
+        pressureChannel.receiveBroadcastStream().listen((event) {
+      setState(() {
+        _pressureReading = event;
+      });
+    });
+  }
+
+  _stopReading() {
+    setState(() {
+      _pressureReading = 0;
+    });
+    pressureSubscription?.cancel();
+    pressureSubscription = null;
+  }
 
   Future<void> _checkAvailability() async {
     try {
@@ -69,6 +90,23 @@ class _BatteryScreenState extends State<BatteryScreen> {
                 padding:
                     EdgeInsets.only(left: 36, right: 36, top: 11, bottom: 11),
                 child: Text('Update'),
+              ),
+            ),
+            Text('Sensor value: $_pressureReading'),
+            ElevatedButton(
+              onPressed: _startReading,
+              child: const Padding(
+                padding:
+                    EdgeInsets.only(left: 36, right: 36, top: 11, bottom: 11),
+                child: Text('Start Stream'),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: pressureSubscription == null ? () {} : _stopReading,
+              child: const Padding(
+                padding:
+                    EdgeInsets.only(left: 36, right: 36, top: 11, bottom: 11),
+                child: Text('Stop Stream'),
               ),
             ),
           ],
