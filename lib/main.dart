@@ -1,4 +1,5 @@
 import 'package:credit_cards/card.dart';
+import 'package:credit_cards/platform-channels/battery_level.dart';
 import 'package:credit_cards/widget/app.dart';
 import 'package:credit_cards/widget/credit_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         depth: 6,
         intensity: 0.5,
       ),
-      home: Home(),
+      home: BatteryScreen(),
     );
   }
 }

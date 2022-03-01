@@ -6,14 +6,14 @@ import 'package:credit_cards/widget/credit_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class CardHome extends StatefulWidget {
+  const CardHome({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<CardHome> createState() => _CardHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _CardHomeState extends State<CardHome> {
   List<CreditCardItem> _cards = [];
 
   LinearGradient? _selectedColor;
