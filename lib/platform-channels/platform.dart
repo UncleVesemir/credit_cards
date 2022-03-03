@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class BatteryScreen extends StatefulWidget {
-  const BatteryScreen({Key? key}) : super(key: key);
+class PlatformScreen extends StatefulWidget {
+  const PlatformScreen({Key? key}) : super(key: key);
 
   @override
-  State<BatteryScreen> createState() => _BatteryScreenState();
+  State<PlatformScreen> createState() => _PlatformScreenState();
 }
 
-class _BatteryScreenState extends State<BatteryScreen> {
+class _PlatformScreenState extends State<PlatformScreen> {
   static const MethodChannel platformBattery =
       MethodChannel('training/battery');
   static const MethodChannel platformPressure =

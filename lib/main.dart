@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return const NeumorphicApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      themeMode: ThemeMode.light, //or dark / system
+      themeMode: ThemeMode.light,
       darkTheme: NeumorphicThemeData(
         baseColor: Color(0xff333333),
         accentColor: Colors.green,
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         depth: 6,
         intensity: 0.5,
       ),
-      home: CardHome(),
+      home: PlatformScreen(),
     );
   }
 }
