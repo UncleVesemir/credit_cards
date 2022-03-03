@@ -1,19 +1,19 @@
 import 'package:credit_cards/book_widget.dart';
 import 'package:credit_cards/const.dart';
-import 'package:credit_cards/widget/credit_card_item.dart';
-import 'package:credit_cards/widget/credit_card_model.dart';
-import 'package:credit_cards/widget/credit_card_widget.dart';
+import 'package:credit_cards/animation/credit_card_item.dart';
+import 'package:credit_cards/animation/credit_card_model.dart';
+import 'package:credit_cards/animation/credit_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class CardHome extends StatefulWidget {
-  const CardHome({Key? key}) : super(key: key);
+class AnimationScreen extends StatefulWidget {
+  const AnimationScreen({Key? key}) : super(key: key);
 
   @override
-  State<CardHome> createState() => _CardHomeState();
+  State<AnimationScreen> createState() => _AnimationScreenState();
 }
 
-class _CardHomeState extends State<CardHome> {
+class _AnimationScreenState extends State<AnimationScreen> {
   List<CreditCardItem> _cards = [];
 
   LinearGradient? _selectedColor;

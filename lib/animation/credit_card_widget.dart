@@ -1,5 +1,5 @@
-import 'package:credit_cards/widget/credit_card_animation_model.dart';
-import 'package:credit_cards/widget/credit_card_item.dart';
+import 'package:credit_cards/animation/credit_card_animation_model.dart';
+import 'package:credit_cards/animation/credit_card_item.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class CreditCards3d extends StatefulWidget {

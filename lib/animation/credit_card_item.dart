@@ -1,4 +1,4 @@
-import 'package:credit_cards/widget/credit_card_model.dart';
+import 'package:credit_cards/animation/credit_card_model.dart';
 import 'package:flutter/material.dart';
 
 class CreditCardItem extends StatefulWidget {
