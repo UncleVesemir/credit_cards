@@ -8,22 +8,131 @@ class FabScreen extends StatefulWidget {
 }
 
 class _FabScreenState extends State<FabScreen> {
+  Widget _increaseButton() {
+    return ClipPath(
+      clipper: GetClipper(),
+      child: Container(
+        height: 130,
+        width: 80,
+        color: Colors.grey.withOpacity(0.6),
+      ),
+    );
+  }
+
+  Widget _decreaseButton() {
+    return Transform(
+      transform: Matrix4(
+        //
+        1, 0, 0, 0.001,
+        0, 0.9, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 3,
+            color: Colors.grey.withOpacity(0.3),
+          ),
+          color: Colors.transparent,
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
+        ),
+        height: 130,
+        width: 80,
+        child: const Icon(Icons.add, size: 35),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
-        child: Container(
-          child: AnimatedButton(
-            onTap: () {
-              print('tapped');
-            },
-          ),
+        child: Column(
+          children: [
+            Flexible(
+              flex: 3,
+              child: Container(),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.elliptical(400, 50),
+                    topRight: Radius.elliptical(400, 50),
+                  ),
+                ),
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    // crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // _decreaseButton(),
+                          // const Text('20'),
+                          // _increaseButton(),
+                          const Spacer(),
+                        ],
+                      ),
+                      AnimatedButton(
+                        onTap: () {
+                          print('tapped');
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      // floatingActionButton: _buildFAB(),
     );
   }
+}
+
+class GetClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double radius = 50;
+    double pi = 3.14;
+
+    double extra = 20;
+
+    Path path = Path()
+      ..lineTo(size.width - radius, extra)
+      ..arcTo(
+          Rect.fromPoints(Offset(size.width - radius, extra),
+              Offset(size.width, radius)), // Rect
+          1.5 * pi, // Start engle
+          0.5 * pi, // Sweep engle
+          true) // direction clockwise
+      ..lineTo(size.width, size.height - radius)
+      ..arcTo(
+          Rect.fromCircle(
+              center: Offset(size.width - radius, size.height - radius),
+              radius: radius),
+          0,
+          0.5 * pi,
+          false)
+      ..lineTo(radius, size.height)
+      ..arcTo(Rect.fromLTRB(0, size.height - radius, radius, size.height),
+          0.5 * pi, 0.5 * pi, false)
+      ..lineTo(0, radius)
+      ..arcTo(Rect.fromLTWH(0, 0, 70, 100), 1 * pi, 0.5 * pi, false)
+      ..close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 class AnimatedButton extends StatefulWidget {
@@ -82,9 +191,7 @@ class _AnimatedButtonState extends State<AnimatedButton>
       width: startWidth * animationValue,
       height: startHeight * animationValue,
       decoration: BoxDecoration(
-        // borderRadius: BorderRadius.circular(100),
         shape: BoxShape.circle,
-        // color: Colors.red,
         boxShadow: [
           BoxShadow(
             spreadRadius: 11,
@@ -122,37 +229,3 @@ class _AnimatedButtonState extends State<AnimatedButton>
     );
   }
 }
-
-// class OpenPainter extends CustomPainter {
-//   final double x;
-//   final double y;
-//   final double radius;
-
-//   OpenPainter(this.x, this.y, this.radius);
-
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     var drawCircle = Paint()
-//       // ..shader = const RadialGradient(
-//       //   colors: [
-//       //     Colors.yellowAccent,
-//       //     Colors.deepOrange,
-//       //   ],
-//       // ).createShader(Rect.fromCircle(
-//       //   center: Offset(150, 20),
-//       //   radius: 10,
-//       // ));
-//       ..shader = ui.Gradient.linear(
-//         Offset(0, 0),
-//         Offset(80, 90),
-//         [
-//           Colors.yellowAccent,
-//           Colors.deepOrange,
-//         ],
-//       );
-//     canvas.drawCircle(Offset(x, -y), radius, drawCircle);
-//   }
-
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) => true;
-// }

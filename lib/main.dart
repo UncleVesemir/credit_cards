@@ -1,3 +1,4 @@
+import 'package:credit_cards/3d/animation_controller.dart';
 import 'package:credit_cards/biometric/biometric.dart';
 import 'package:credit_cards/card.dart';
 import 'package:credit_cards/design_ideas/fab.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         depth: 6,
         intensity: 0.5,
       ),
-      home: FabScreen(),
+      home: Main(),
     );
   }
 }
