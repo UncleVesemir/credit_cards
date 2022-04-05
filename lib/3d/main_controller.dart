@@ -268,11 +268,11 @@ class _MainItemsControllerState extends State<MainItemsController> {
         });
         return;
       } else if (selectedIndex == keys.length - 1) {
-        selectedCard!.currentState!.animateMiddleToBottom();
-        setState(() {
-          selectedIndex = null;
-          selectedCard = null;
-        });
+        // selectedCard!.currentState!.animateMiddleToBottom();
+        // setState(() {
+        //   selectedIndex = null;
+        //   selectedCard = null;
+        // });
       }
     }
     // if (selectedCard!.currentState!.position == Position.top) {}
@@ -336,11 +336,8 @@ class _MainItemsControllerState extends State<MainItemsController> {
           child: GestureDetector(
             onVerticalDragUpdate: _updateDiraction,
             onVerticalDragEnd: _determineDirection,
-            child: Container(
-              color: Colors.white,
-              child: Stack(
-                children: cards,
-              ),
+            child: Stack(
+              children: cards,
             ),
           ),
         ),
